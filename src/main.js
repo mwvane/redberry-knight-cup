@@ -5,11 +5,15 @@ import store from './store'
 import {library} from "@fortawesome/fontawesome-svg-core";
 import {
     faCircleRight,
+    faCheckDouble,
+    faChessQueen,
 }
     from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome"
 library.add(
     faCircleRight,
+    faCheckDouble,
+    faChessQueen,
 )
 import BootstrapVue3 from "bootstrap-vue-3";
 import "bootstrap/dist/css/bootstrap.css";
