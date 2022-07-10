@@ -116,7 +116,7 @@ export default {
         },
         {
           label: "intermediate",
-          code: "intermediate"
+          code: "normal"
         },
         {
           label: "professional",
