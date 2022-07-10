@@ -15,12 +15,14 @@
         <ProgressLevel :levels="levels"></ProgressLevel>
         <h3 class="my-5" style="color: black">Chess experience</h3>
         <form class="w-75 my-2">
-          <b-form-select class="w-50" v-model="model.experience_level" @input="update">
+          <b-form-select class="w-50" v-model="model.experience_level.value" @input="update">
+            <b-form-select-option disabled value="none">Please, select an option</b-form-select-option>
             <b-form-select-option v-for="item in experiences" :key="item" :value="item">
               {{ item }}
             </b-form-select-option>
           </b-form-select>
-          <b-form-select class="w-50" v-model="model.character_id" @input="update">
+          <b-form-select class="w-50" v-model="model.character_id.value" @input="update">
+            <b-form-select-option disabled value="none">Please, select an option</b-form-select-option>
             <b-form-select-option v-for="person in characters" :key="person.id" :value="person.id">
               {{ person.name }}
             </b-form-select-option>
@@ -32,17 +34,19 @@
                           v-model="model.already_participated"
                           value="true"
                           @input="update"
-            >Yes</b-form-radio>
+            >Yes
+            </b-form-radio>
             <b-form-radio name="participated"
                           v-model="model.already_participated"
                           value="false"
                           @input="update"
-            >No</b-form-radio>
+            >No
+            </b-form-radio>
           </div>
 
           <div class="d-flex justify-content-between py-5">
             <b-button @click="back" variant="outline-dark"> Back</b-button>
-            <b-button @click="done" variant="primary">Done</b-button>
+            <b-button @click="next" variant="primary">Done</b-button>
           </div>
         </form>
       </div>
@@ -54,9 +58,12 @@
 <script>
 import CustomHeader from "@/components/CustomHeader";
 import ProgressLevel from "@/components/ProgressLevel";
+import {registrationMixin} from "@/mixins";
+import {mapActions} from "vuex";
+
 export default {
   name: "ExperienceComponent",
-  components:{
+  components: {
     CustomHeader,
     ProgressLevel,
   },
@@ -71,27 +78,40 @@ export default {
       experiences: ['Beginner', 'Intermediate', 'Professional'],
     }
   },
-  mounted() {
-    this.model = this.data
+  watch: {
+    data: {
+      handler(newData) {
+        this.model = {...newData}
+      },
+      deep: true
+    }
   },
-  computed:{
+  computed: {
     backgroundImage() {
       return {
         backgroundImage: `url(${require('../assets/chess3.png')})`,
       }
     }
   },
-  methods:{
-    update(){
-      this.$emit('update', this.model)
+  mixins: [registrationMixin],
+  methods: {
+    ...mapActions(['removeErrorMessage', 'addErrorMessage']),
+    update() {
+      setTimeout(() => {
+        this.$emit('update', this.model)
+      })
     },
-    back(){
+    back() {
       this.$emit('back')
     },
-    done(){
-      this.$emit('done')
+    next() {
+      this.validateAndNext(["character_id", "experience_level"])
     },
-  }
+  },
+  beforeMount() {
+    this.model = {...this.data}
+  },
+
 }
 </script>
 

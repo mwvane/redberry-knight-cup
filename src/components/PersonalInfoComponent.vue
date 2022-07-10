@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="isLoaded">
     <div class="row">
       <div class="col-6 image" :style="backgroundImage">
         <CustomHeader></CustomHeader>
@@ -14,34 +14,38 @@
         </div>
         <ProgressLevel class="my-3" :levels="levels"></ProgressLevel>
         <h3 class="my-5" style="color: black">Personal Information</h3>
-        <b-form @submit="next" class="w-75 my-2">
+        <b-form @submit.prevent="next" class="w-75 my-2">
           <b-form-input
               type="text"
-              class="my-3"
-              v-model="model.name"
+              class="my-3 custom-input"
+              v-model="model.name.value"
+              placeholder="name"
               @input="update"
           ></b-form-input>
           <b-form-input
               type="email"
-              class="my-3"
-              v-model="model.email"
+              class="my-3 custom-input"
+              v-model="model.email.value"
+              placeholder="email"
               @input="update"
           ></b-form-input>
           <b-form-input
               type="number"
-              class="my-3"
-              v-model="model.phone"
+              class="my-3 custom-input"
+              v-model="model.phone.value"
+              placeholder="phone"
               @input="update"
           ></b-form-input>
           <b-form-input
               type="date"
-              class="my-3"
-              v-model="model.date_of_birth"
+              class="my-3 custom-input"
+              v-model="model.date_of_birth.value"
+              placeholder="test"
               @input="update"
           ></b-form-input>
           <div class="d-flex justify-content-between py-5">
             <b-button @click="cancel" variant="outline-dark"> Cancel</b-button>
-            <b-button type="submit" @click="next" variant="primary">Next</b-button>
+            <b-button type="submit" variant="primary">Next</b-button>
           </div>
         </b-form>
       </div>
@@ -52,12 +56,14 @@
 <script>
 import ProgressLevel from "@/components/ProgressLevel";
 import CustomHeader from "@/components/CustomHeader";
+import {mapActions, mapState} from "vuex";
+import {registrationMixin} from "@/mixins";
 
 export default {
   name: "PersonalInfoComponent",
   components: {
     ProgressLevel,
-    CustomHeader
+    CustomHeader,
   },
   props: {
     data: Object,
@@ -65,35 +71,51 @@ export default {
   },
   data() {
     return {
-      model: {}
+      model: {},
+      isLoaded: false,
+      error: null
     }
   },
-  mounted() {
-    this.model = this.data
-  },
   computed: {
+    ...mapState(['errorMessages']),
     backgroundImage() {
       return {
         backgroundImage: `url(${require('../assets/chess2.png')})`,
       }
     }
   },
+  mixins: [registrationMixin],
   methods: {
+    ...mapActions(['addErrorMessage', 'removeErrorMessage']),
     update() {
-      this.$emit('update', this.model)
+      setTimeout(() => {
+        this.$emit('update', this.model)
+      })
     },
     next() {
-      this.$emit("next")
+      this.validateAndNext(['name',"email", "phone", "date_of_birth"])
     },
     cancel() {
       this.$emit("cancel")
     }
-  }
+  },
+  watch: {
+    data: {
+      handler(newData) {
+        this.model = {...newData}
+      },
+      deep: true
+    }
+  },
+  mounted() {
+    this.model = {...this.data}
+    this.isLoaded = true
+  },
 }
 </script>
 
 <style>
-.image{
+.image {
   height: 100vh;
   background-size: 100%;
   background-repeat: no-repeat;
@@ -101,9 +123,20 @@ export default {
   justify-content: center;
   justify-items: center;
 }
-.caption{
+
+.caption {
   max-width: 300px;
   margin-top: 130px;
   margin-left: 70px;
+}
+
+.custom-input {
+  border: none !important;
+  border-bottom: 3px solid rgba(223, 223, 223, 1) !important;
+}
+
+.custom-input:focus {
+  background: #E9ECEF !important;
+  outline: none !important;
 }
 </style>

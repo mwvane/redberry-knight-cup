@@ -6,7 +6,7 @@
           <div v-if="level.status === active" class="active">
             {{level.number}}
           </div>
-          <div v-if="level.status === disabled" class="disabled">
+          <div v-if="level.status === hidden" class="disabled">
             {{level.number}}
           </div>
           <div v-if="level.status === done" class="done">
@@ -26,17 +26,13 @@ export default {
   props:{
     levels: Array
   },
-  computed:{
-    active(){
-      return status.active
-    },
-    disabled(){
-      return status.disabled
-    },
-    done(){
-      return status.done
+  data(){
+    return{
+      active: status.active,
+      hidden: status.hidden,
+      done: status.done
     }
-  }
+  },
 }
 </script>
 
