@@ -7,6 +7,8 @@ import {
     faCircleRight,
     faCheckDouble,
     faChessQueen,
+    faCircleExclamation,
+    faXmark,
 }
     from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome"
@@ -14,6 +16,8 @@ library.add(
     faCircleRight,
     faCheckDouble,
     faChessQueen,
+    faCircleExclamation,
+    faXmark,
 )
 import BootstrapVue3 from "bootstrap-vue-3";
 import "bootstrap/dist/css/bootstrap.css";
