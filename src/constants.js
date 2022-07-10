@@ -1,9 +1,5 @@
 export const status = {
     active: 'active',
-    disabled: 'disabled',
+    hidden: 'hidden',
     done: 'done'
-}
-export const level = {
-    personalInfo: 'Personal info',
-    experience: 'Experience'
 }
