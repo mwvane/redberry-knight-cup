@@ -14,7 +14,7 @@
         </div>
         <ProgressLevel :levels="levels" class="my-3"></ProgressLevel>
         <h3 class="my-5" style="color: black">Chess experience</h3>
-        <form class="my-2" style="width: 82%">
+        <form class="my-2" style="width: 85%">
           <div class="row">
             <div class="col-6">
               <v-select v-model="model.experience_level.value"

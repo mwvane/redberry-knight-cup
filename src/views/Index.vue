@@ -1,6 +1,6 @@
 <template>
   <div class="main-container overflow-hidden">
-    <div class="row">
+    <div class="row g-0">
       <div class="col-6 image" :style="backgroundImage">
         <CustomHeader class="w-100"></CustomHeader>
       </div>
