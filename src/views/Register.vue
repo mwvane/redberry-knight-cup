@@ -118,7 +118,7 @@ export default {
           phone: this.model.phone.value,
           date_of_birth: this.model.date_of_birth.value,
           experience_level: this.model.experience_level.value,
-          // already_participated: this.model.already_participated.value === 'true',
+          already_participated: this.model.already_participated.value === 'true',
           character_id: this.model.character_id.value,
         }
         fetch(`${this.apiUrl}/api/register`, {
