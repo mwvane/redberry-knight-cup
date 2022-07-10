@@ -2,7 +2,7 @@ import {isValid} from "@/validation";
 
 export const registrationMixin = {
     methods: {
-        validate(fields) {
+        validate(fields, validFields) {
             const errors = []
             for (let key of fields) {
                 let result = null
@@ -10,6 +10,9 @@ export const registrationMixin = {
                     result = isValid(key, this.model[key].value)
                     if (result !== true) {
                         errors.push(result)
+                        validFields[key] = false
+                    } else {
+                        validFields[key] = true
                     }
                 }
             }
@@ -23,11 +26,11 @@ export const registrationMixin = {
                 }, 3000)
             }
         },
-        validateAndNext(validationFields){
-            const errors = this.validate(validationFields)
-            if(errors.length){
+        validateAndNext(validationFields, validFields) {
+            const errors = this.validate(validationFields, validFields)
+            if (errors.length) {
                 this.showErrors(errors)
-            }else {
+            } else {
                 this.$emit('next')
             }
         }

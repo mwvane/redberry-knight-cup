@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import {library} from "@fortawesome/fontawesome-svg-core";
+import vSelect from "vue-select"
 import {
     faCircleRight,
     faCheckDouble,
@@ -28,5 +29,6 @@ const app = createApp(App)
     .use(router)
     .use(BootstrapVue3)
     .component("font-awesome-icon",FontAwesomeIcon)
+    .component("v-select", vSelect)
 
 app.mount('#app')

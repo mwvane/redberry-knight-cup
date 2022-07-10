@@ -12,6 +12,7 @@
       <ExperienceComponent :levels="levels"
                            :data="model"
                            :characters="characters"
+                           :is-done-button-disabled="isDoneButtonDisabled"
                            @update="update"
                            @back="back"
                            @next="next">
@@ -28,6 +29,7 @@ import PersonalInfoComponent from "@/components/PersonalInfoComponent";
 import ExperienceComponent from "@/components/ExperienceComponent";
 import ErrorPopup from "@/components/ErrorPopup";
 import {mapActions} from "vuex";
+import {registrationMixin} from "@/mixins";
 
 export default {
   name: "Register",
@@ -56,16 +58,16 @@ export default {
           isRequired: true
         },
         experience_level: {
-          value: 'none',
+          value: null,
           isRequired: true
         },
         already_participated: {
-          value: false,
-          isRequired: false
+          value: null,
+          isRequired: true
         },
         character_id: {
-          value: 'none',
-          isRequired: false
+          value: null,
+          isRequired: true
         },
       },
       level: "Personal info",
@@ -82,7 +84,9 @@ export default {
           number: 2,
           status: status.hidden
         },
-      ]
+      ],
+      apiUrl: "https://chess-tournament-api.devtest.ge",
+      isDoneButtonDisabled: false
     }
   },
 
@@ -94,6 +98,7 @@ export default {
       return this.currentLevelIndex === 1
     }
   },
+  mixins:[registrationMixin],
   methods: {
     ...mapActions(['addErrorMessage', 'removeErrorMessage']),
     update(model) {
@@ -101,14 +106,55 @@ export default {
       localStorage.setItem("user", JSON.stringify(this.model))
     },
     next() {
-      if(this.currentLevelIndex + 1 < this.levels.length){
+      if (this.currentLevelIndex + 1 < this.levels.length) {
         this.levels[this.currentLevelIndex].status = 'done'
         this.levels[++this.currentLevelIndex].status = 'active'
         localStorage.setItem('level', this.currentLevelIndex)
-      }else{
-        localStorage.removeItem("user")
-        this.levels[this.currentLevelIndex].status = status.done
-        this.$router.push({name: 'completed'})
+      } else {
+        this.isDoneButtonDisabled = true
+        const data = {
+          name: this.model.name.value,
+          email: this.model.email.value,
+          phone: this.model.phone.value,
+          date_of_birth: this.model.date_of_birth.value,
+          experience_level: this.model.experience_level.value,
+          // already_participated: this.model.already_participated.value === 'true',
+          character_id: this.model.character_id.value,
+        }
+        fetch(`${this.apiUrl}/api/register`, {
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+            .then(res => {
+              // res.json()
+              if(res.ok){
+                return {errors: []}
+              }else{
+                return res.json()
+              }
+            })
+            .then(res => {
+              if (res.errors && res.errors.length) {
+                const errors = []
+                for(let [i,error] of res.errors.entries()){
+                  errors.push({
+                    type: 'error',
+                    message: error.msg,
+                    id: i + 1
+                  })
+                }
+                this.showErrors(errors)
+              }else{
+                localStorage.removeItem("user")
+                this.levels[this.currentLevelIndex].status = status.done
+                this.$router.push({name: 'completed'})
+              }
+              this.isDoneButtonDisabled = false
+            })
+
       }
     },
     cancel() {
@@ -141,9 +187,14 @@ export default {
       this.levels[i].status = status.done
     }
     this.levels[this.currentLevelIndex].status = status.active
-    fetch("https://chess-tournament-api.devtest.ge/api/grandmasters")
+    fetch(`${this.apiUrl}/api/grandmasters`)
         .then(res => res.json())
-        .then(data => this.characters = data)
+        .then(data => {
+          this.characters = data.map(item => {
+            item.image = `${this.apiUrl}${item.image}`
+            return item
+          })
+        })
   },
   beforeRouteLeave() {
     localStorage.removeItem('level')

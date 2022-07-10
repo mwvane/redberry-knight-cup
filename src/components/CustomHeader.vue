@@ -1,7 +1,7 @@
 <template>
   <div class="main-container" :style="style">
     <font-awesome-icon :icon="icon" class="px-1"></font-awesome-icon>
-    <label class="h-100 text py-1">{{text}}</label>
+    <label class="h-100 text py-3">{{text}}</label>
   </div>
 </template>
 
@@ -24,7 +24,7 @@ export default {
 
 <style scoped>
 .main-container{
-  height: 40px;
+  height: 55px;
   color: white;
   padding-left: 20px;
 }

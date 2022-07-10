@@ -7,7 +7,7 @@ const errorMessages = {
     email: {
         id: 2,
         type: 'invalid email',
-        message: "Mail format must be '@redberry.com'",
+        message: "Mail format must be '@redberry.ge'",
     },
     phone: {
         id: 3,
@@ -23,6 +23,16 @@ const errorMessages = {
         id: 5,
         type: 'invalid date',
         message: "This field is required",
+    },
+    character_id: {
+        id: 6,
+        type: 'invalid character',
+        message: "This field is required",
+    },
+    already_participated: {
+        id: 7,
+        type: 'invalid participated value',
+        message: "This field is required",
     }
 }
 const rules = {
@@ -33,7 +43,7 @@ const rules = {
         return errorMessages[key]
     },
     email: (key, value) => {
-        if (value.includes('@redberry.com')) {
+        if (value.includes('@redberry.ge')) {
             return true
         }
         return errorMessages[key]
@@ -45,13 +55,25 @@ const rules = {
         return errorMessages[key]
     },
     experience_level: (key, value) => {
-        if (value !== "none") {
+        if (value !== null) {
             return true
         }
         return errorMessages[key]
     },
     date_of_birth: (key, value) => {
         if (value) {
+            return true
+        }
+        return errorMessages[key]
+    },
+    character_id: (key, value) => {
+        if (value !== null) {
+            return true
+        }
+        return errorMessages[key]
+    },
+    already_participated: (key, value) => {
+        if (value !== null && value !== undefined) {
             return true
         }
         return errorMessages[key]
