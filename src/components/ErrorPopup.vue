@@ -1,7 +1,7 @@
 <template>
   <div v-if="errorMessages" class="main-container">
     <div v-for="error  in errorMessages" :key="error.id" >
-      <div class="error-item">
+      <div class="error-item mx-2">
         <div class="error-header">
           <font-awesome-icon icon="circle-exclamation"></font-awesome-icon>
           <span class="mx-2">{{error.type}}</span>
@@ -45,8 +45,8 @@ export default {
 .main-container {
   max-width: 300px;
   display: block;
-  top: 0;
-  right: 0;
+  top: 15px;
+  right: 25px;
   position: absolute;
   z-index: 99;
 }
